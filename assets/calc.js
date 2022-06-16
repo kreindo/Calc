@@ -31,9 +31,46 @@ const inverseNumber = () => {
   calculator.displayNumber = calculator.displayNumber * -1;
 }
 
-const performCalculation = () => {
-  
+
+const handleOperation = (operator) => {
+  if(!calculator.waitingForSecondNumber) {
+    calculator.operator = operator;
+    calculator.waitingForSecondNumber = true;
+    calculator.firstNumber = calculator.displayNumber;
+    calculator.displayNumber = 0;
+
+  }else {
+    alert('Operator defined')
+  }
 }
+
+const performCalculation = () => {
+
+  if(calculator.firstNumber == null || calculator.operator == null) {
+    alert("Please input a number")
+    return
+  }
+
+  let result = 0;
+  if(calculator.operator === "+"){
+    result = parseInt(calculator.firstNumber) + parseInt(calculator.displayNumber);
+  } else {
+    result = parseInt(calculator.firstNumber) - parseInt(calculator.displayNumber);
+  }
+
+  const history = {
+    firstNumber: calculator.firstNumber,
+    secondNumber: calculator.displayNumber,
+    operator: calculator.operator,
+    result: result
+  }
+
+  putHistory(history)
+  calculator.displayNumber = result;
+  renderHistory()
+
+}
+
 
 const buttons = document.querySelectorAll(".button");
 for (let button of buttons) {
@@ -52,13 +89,13 @@ for (let button of buttons) {
       return
     }
 
-    if(target.classList.contains('equals')) {
+    if(target.classList.contains('equal')) {
       performCalculation();
       updateData();
       return;
     }
     if(target.classList.contains('operator')) {
-      handleOperator(target.innerText);
+      handleOperation(target.innerText);
       return;
     }
 
